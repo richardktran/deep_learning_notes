@@ -59,6 +59,7 @@ def cross_entropy_loss(y_hat, y):
 
 
 def predict(X, parameters):
+    np.random.seed(42)
     W1 = parameters['W1']
     b1 = parameters['b1']
     W2 = parameters['W2']
@@ -77,6 +78,7 @@ def predict(X, parameters):
 
 
 def train_model(X_train, Y_train, X_val, Y_val, W1, b1, W2, b2, W3, b3, epochs=EPOCHS, learning_rate=LEARNING_RATE):
+    np.random.seed(42)
     consts = []
     n = X_train.shape[0]
     for epoch in range(epochs):
@@ -89,14 +91,14 @@ def train_model(X_train, Y_train, X_val, Y_val, W1, b1, W2, b2, W3, b3, epochs=E
             'b3': b3
         }
         # Forward propagation (784 mean 28x28)
-        Z1, A1, Z2, A2, Z3, A3, _ = predict(X_train, parameters)  # (n, 1024), (n, 256), (n, 10)
+        Z1, A1, Z2, A2, Z3, A3, train_predict = predict(X_train, parameters)  # (n, 1024), (n, 256), (n, 10)
 
         # Convert labels to one-hot vectors
         y_train_one_hot = np.eye(10)[Y_train]  # (n, 10)
 
         # Compute loss
         const = cross_entropy_loss(A3, y_train_one_hot)
-        accuracy = np.mean(np.argmax(A3, axis=1) == Y_train)
+        accuracy = np.mean(train_predict == Y_train)
 
         _, _, _, _, _, _, val_predict = predict(X_val, parameters)
         accuracy_val = np.mean(val_predict == Y_val)
@@ -121,7 +123,7 @@ def train_model(X_train, Y_train, X_val, Y_val, W1, b1, W2, b2, W3, b3, epochs=E
         W3 -= learning_rate * dW3
         b3 -= learning_rate * db3
 
-        print(f'Epoch {epoch + 1}/{epochs}, loss: {const}, Accuracy: {accuracy}, Accuracy val: {accuracy_val}')
+        print("Epoch {}: Cost: {:.3f} Acc: {:.3f} Validation Acc: {:.3f}".format(epoch+1, np.squeeze(const), accuracy, accuracy_val))
 
     parameters = {
         'W1': W1,
@@ -136,12 +138,12 @@ def train_model(X_train, Y_train, X_val, Y_val, W1, b1, W2, b2, W3, b3, epochs=E
 
 
 def main():
+    np.random.seed(42)
     (X_train, Y_train), (X_val, Y_val) = load_data()
 
     # Flatten and normalize the images
     X_train = preprocess_image(X_train)  # (n, 784)
     X_val = preprocess_image(X_val)  # (n, 784)
-    n = X_train.shape[0]
     no_categories = 10
     d0 = X_train.shape[1]  # 784
     d1 = 1024
