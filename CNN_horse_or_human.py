@@ -112,4 +112,4 @@ if __name__ == "__main__":
     horse_or_human.build_model()
     # horse_or_human.summary()
     horse_or_human.fit(mode="load")
-    horse_or_human.predict("./test_assets/horses_or_humans/human_1.jpeg")
+    horse_or_human.predict("./test_assets/horses_or_humans/human_cartoon_2.png")
