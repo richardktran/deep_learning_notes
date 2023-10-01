@@ -7,7 +7,7 @@ from keras.optimizers import RMSprop, Adam
 from keras.callbacks import ModelCheckpoint
 
 ROOT_DATASET_DIR = "./datasets"
-CHECKPOINT_PATH = "./models/horses_or_humans/checkpoints/best_model.h5"
+CHECKPOINT_PATH = "models/horses_or_humans/best_model.h5"
 
 
 class HorseOrHuman:
@@ -63,14 +63,21 @@ class HorseOrHuman:
     def load_model(self):
         self.model.load_weights(CHECKPOINT_PATH)
 
-    def fit(self):
-        self.model.fit(
-            self.train_data,
-            epochs=15,
-            validation_data=self.validation_data,
-            verbose=1,
-            callbacks=[self.save_checkpoint_callback()]
-        )
+    def fit(self, mode="train"):
+        if mode == "train":
+            self.model.fit(
+                self.train_data,
+                epochs=15,
+                validation_data=self.validation_data,
+                verbose=1,
+                callbacks=[self.save_checkpoint_callback()]
+            )
+        elif mode == "load":
+            self.load_model()
+        else:
+            print("Invalid mode")
+
+        return self.model
 
     def get_model(self) -> Sequential:
         return self.model
@@ -104,7 +111,5 @@ if __name__ == "__main__":
     horse_or_human = HorseOrHuman()
     horse_or_human.build_model()
     # horse_or_human.summary()
-    # horse_or_human.fit()
-
-    horse_or_human.load_model()
+    horse_or_human.fit(mode="load")
     horse_or_human.predict("./test_assets/horses_or_humans/human_1.jpeg")
