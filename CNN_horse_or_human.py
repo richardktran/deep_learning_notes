@@ -1,10 +1,10 @@
 import numpy as np
-from keras.preprocessing.image import ImageDataGenerator
-from keras.preprocessing import image
-from keras.models import Sequential
-from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout
-from keras.optimizers import RMSprop, Adam
-from keras.callbacks import ModelCheckpoint
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout
+from tensorflow.keras.optimizers import RMSprop, Adam
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 ROOT_DATASET_DIR = "./datasets"
 CHECKPOINT_PATH = "models/horses_or_humans/best_model.h5"
