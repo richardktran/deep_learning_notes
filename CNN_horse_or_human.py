@@ -6,13 +6,16 @@ from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout
 from tensorflow.keras.optimizers import RMSprop, Adam
 from tensorflow.keras.callbacks import ModelCheckpoint
 
-ROOT_DATASET_DIR = "./datasets"
-CHECKPOINT_PATH = "models/horses_or_humans/best_model.h5"
+DATASET = "horse_or_human"
+
+ROOT_DATASET_DIR = "./datasets/{}".format(DATASET)
+ROOT_TEST_ASSETS_DIR = "./test_assets/{}/".format(DATASET)
+CHECKPOINT_PATH = "models/{}/cnn_model.h5".format(DATASET)
 
 
-class HorseOrHuman:
-    TRAIN_DIR = ROOT_DATASET_DIR + "/horse-or-human/horse-or-human"
-    VALIDATION_DIR = ROOT_DATASET_DIR + "/horse-or-human/validation-horse-or-human"
+class CNNHorseOrHuman:
+    TRAIN_DIR = ROOT_DATASET_DIR + "/horse-or-human"
+    VALIDATION_DIR = ROOT_DATASET_DIR + "/validation-horse-or-human"
     IMAGE_WIDTH = 150
     IMAGE_HEIGHT = 150
     IMAGE_CHANNELS = 3
@@ -75,7 +78,7 @@ class HorseOrHuman:
         elif mode == "load":
             self.load_model()
         else:
-            print("Invalid mode")
+            raise Exception("Invalid mode")
 
         return self.model
 
@@ -83,6 +86,7 @@ class HorseOrHuman:
         return self.model
 
     def predict(self, path):
+        path = ROOT_TEST_ASSETS_DIR + path
         img = image.load_img(path, target_size=(150, 150))
         image_array = image.img_to_array(img) / 255
         image_array = np.expand_dims(image_array, axis=0)
@@ -108,8 +112,8 @@ class HorseOrHuman:
 
 
 if __name__ == "__main__":
-    horse_or_human = HorseOrHuman()
+    horse_or_human = CNNHorseOrHuman()
     horse_or_human.build_model()
     # horse_or_human.summary()
     horse_or_human.fit(mode="load")
-    horse_or_human.predict("./test_assets/horses_or_humans/human_cartoon_2.png")
+    horse_or_human.predict("human_cartoon_2.png")
